@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="SearchFragmentBinding"
+            type="de.htw_berlin.qrdenker.SearchFragment" />
+    </data>
+    <!--contains the results of the search-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            app:cardBackgroundColor="@color/beige"
+            tools:context=".RecordFragment">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_result_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toTopOf="@+id/search_input_edtxt"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!--input of the keyword for the search-->
+            <EditText
+                android:id="@+id/search_input_edtxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/switch_layout"
+                android:inputType="text"/>
+
+            <!--switch for filtering the search-->
+		    <LinearLayout
+                android:id="@+id/switch_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@id/search_search_btn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+                <TextView
+                    android:id="@+id/document_txtview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dokument"/>
+
+                <Switch
+                    android:id="@+id/search_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/collection_txtview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kollektion"/>
+            </LinearLayout>
+
+            <!--initialises the search process-->
+            <Button
+                android:id="@+id/search_search_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Suchen"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

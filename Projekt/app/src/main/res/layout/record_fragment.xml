@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="recordSharedViewModel" type="de.htw_berlin.qrdenker.RecordSharedViewModel"/>
+    </data>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".RecordFragment">
+
+            <EditText
+                android:id="@+id/record_title_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textAlignment="center"
+                android:autofillHints="Titel eingeben"
+                android:textSize="50sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/record_section_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/record_title_edit_text" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:maxImageSize="40dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginEnd="24dp"
+                app:borderWidth="0dp"
+                android:backgroundTint="@color/set1_color_accent2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_add" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton_image"
+                style="@style/FloatingActionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:borderWidth="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:maxImageSize="40dp"
+                android:visibility="invisible"
+                android:backgroundTint="@color/set1_color1"
+                android:tintMode="@color/set1_color8"
+                app:layout_constraintBottom_toTopOf="@+id/floatingActionButton_title"
+                app:layout_constraintEnd_toEndOf="@+id/floatingActionButton_title"
+                app:srcCompat="@drawable/ic_add_image" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton_upload"
+                style="@style/FloatingActionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:borderWidth="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:maxImageSize="40dp"
+                android:visibility="invisible"
+                android:backgroundTint="@color/set1_color1"
+                android:tintMode="@color/set1_color8"
+                app:layout_constraintBottom_toTopOf="@+id/floatingActionButton_text"
+                app:layout_constraintEnd_toEndOf="@+id/floatingActionButton_text"
+                app:srcCompat="@drawable/ic_upload" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton_title"
+                style="@style/FloatingActionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:borderWidth="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:maxImageSize="40dp"
+                android:visibility="invisible"
+                android:backgroundTint="@color/set1_color1"
+                android:tintMode="@color/set1_color8"
+                app:layout_constraintBottom_toTopOf="@+id/floatingActionButton_newDoc"
+                app:layout_constraintEnd_toEndOf="@+id/floatingActionButton_newDoc"
+                app:srcCompat="@drawable/ic_title" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton_text"
+                style="@style/FloatingActionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:borderWidth="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:maxImageSize="40dp"
+                android:visibility="invisible"
+                android:backgroundTint="@color/set1_color1"
+                android:tintMode="@color/set1_color8"
+                app:layout_constraintBottom_toTopOf="@+id/floatingActionButton_image"
+                app:layout_constraintEnd_toEndOf="@+id/floatingActionButton_image"
+                app:srcCompat="@drawable/ic_text"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton_newDoc"
+                style="@style/FloatingActionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:borderWidth="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:maxImageSize="40dp"
+                android:visibility="invisible"
+                android:backgroundTint="@color/set1_color1"
+                android:tintMode="@color/set1_color8"
+                app:layout_constraintBottom_toTopOf="@+id/floatingActionButton_main"
+                app:layout_constraintEnd_toEndOf="@+id/floatingActionButton_main"
+                app:srcCompat="@drawable/ic_add_qr_code"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

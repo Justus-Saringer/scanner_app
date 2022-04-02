@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">QRDenker</string>
+    <string name="open">Oeffnen</string>
+    <string name="close">Schliessen</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Dokument" />
+</resources>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "202430312811",
+    "project_id": "qrdenker",
+    "storage_bucket": "qrdenker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:202430312811:android:6e344093e0590156d31c2e",
+        "android_client_info": {
+          "package_name": "de.htw_berlin.qrdenker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "202430312811-vuhkh8oqpqr80q7mj8p28t5jqltnmp45.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0yMPoRLtV71dQqWD2gUk5pwKr-k7KRu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "202430312811-vuhkh8oqpqr80q7mj8p28t5jqltnmp45.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
