@@ -4,15 +4,14 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
 import com.eu.fragmentstatemanager.StateManager
 import com.eu.fragmentstatemanager.StateManagerBuilder
-import de.htw_berlin.qrdenker.firebase.viewmodel.DocumentViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import android.net.NetworkInfo
 
 import android.net.ConnectivityManager
+import android.net.ConnectivityManager.TYPE_MOBILE
+import android.net.ConnectivityManager.TYPE_WIFI
 import android.view.Gravity
 
 
@@ -76,11 +75,11 @@ class MainActivity : AppCompatActivity() {
         val connectivityManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connected =
-            connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)!!.state == NetworkInfo.State.CONNECTED ||
-                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)!!.state == NetworkInfo.State.CONNECTED
+            connectivityManager.getNetworkInfo(TYPE_MOBILE)?.state == NetworkInfo.State.CONNECTED ||
+                    connectivityManager.getNetworkInfo(TYPE_WIFI)?.state == NetworkInfo.State.CONNECTED
         if (!connected)
         {
-            var connectionToast = Toast.makeText(this, "Your Application has no internet connection\n\nThe app will not work properly!", Toast.LENGTH_LONG)
+            val connectionToast = Toast.makeText(this, "Your Application has no internet connection\n\nThe app will not work properly!", Toast.LENGTH_LONG)
             connectionToast.setGravity(Gravity.CENTER,0, 0)
 
             connectionToast.show()

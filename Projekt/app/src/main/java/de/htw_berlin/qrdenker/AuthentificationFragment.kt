@@ -1,6 +1,5 @@
 package de.htw_berlin.qrdenker
 
-import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
@@ -15,12 +14,13 @@ import de.htw_berlin.qrdenker.databinding.FragmentAuthentificationBinding
 import kotlinx.android.synthetic.main.fragment_authentification.*
 import com.google.firebase.auth.FirebaseAuth
 import de.htw_berlin.qrdenker.MainActivity.Companion.SCANNER_ID
+import java.lang.Exception
 
 class AuthentificationFragment : Fragment() {
 
     val ref = FirebaseAuth.getInstance()
 
-    lateinit var binding : FragmentAuthentificationBinding
+    private var binding : FragmentAuthentificationBinding? = null
     lateinit var auth : FirebaseAuth
 
     internal lateinit var loginTxtEditxt : EditText
@@ -44,24 +44,25 @@ class AuthentificationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAuthentificationBinding.inflate(layoutInflater, container, false)
-        return binding.root
+        if (binding == null) throw Exception("AuthentificationFragmentBinding is null")
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         auth = FirebaseAuth.getInstance()
 
-        loginTxtEditxt = binding.loginEmailEditText
-        loginPwdEditxt = binding.loginPasswordEditText
-        loginBtn = binding.loginButton
+        loginTxtEditxt = requireNotNull(binding?.loginEmailEditText)
+        loginPwdEditxt = requireNotNull(binding?.loginPasswordEditText)
+        loginBtn = requireNotNull(binding?.loginButton)
 
-        regisEmailEditxt = binding.emailEditText
-        regisPwdEditText = binding.passwordEditText
-        reRegisPwdEditText = binding.rePasswordEditText
-        regBtn = binding.regButton
+        regisEmailEditxt = requireNotNull(binding?.emailEditText)
+        regisPwdEditText = requireNotNull(binding?.passwordEditText)
+        reRegisPwdEditText = requireNotNull(binding?.rePasswordEditText)
+        regBtn = requireNotNull(binding?.regButton)
 
-        logSwitchTxtView = binding.loginTxtview
-        regSwitchTxtView = binding.registrationTxtview
-        logRegSwitch = binding.authentificationSwitch
+        logSwitchTxtView = requireNotNull(binding?.loginTxtview)
+        regSwitchTxtView = requireNotNull(binding?.registrationTxtview)
+        logRegSwitch = requireNotNull(binding?.authentificationSwitch)
 
         logSwitchTxtView.setTypeface(null, Typeface.BOLD)
 
@@ -89,7 +90,7 @@ class AuthentificationFragment : Fragment() {
             }
             else
             {
-                var pwToast = Toast.makeText(this.requireActivity(), "Your Application has no internet connection\n\nThe app will not work properly!", Toast.LENGTH_LONG)
+                val pwToast = Toast.makeText(this.requireActivity(), "Your Application has no internet connection\n\nThe app will not work properly!", Toast.LENGTH_LONG)
                 pwToast.setGravity(Gravity.CENTER,0, 0)
                 pwToast.show()
             }
@@ -102,49 +103,49 @@ class AuthentificationFragment : Fragment() {
 
     private fun registerUser() {
 
-        var email : String = binding.emailEditText.text.toString().trim()
-        var password: String = binding.passwordEditText.text.toString().trim()
+        val email : String = binding?.emailEditText?.text.toString().trim()
+        val password: String = binding?.passwordEditText?.text.toString().trim()
 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this.requireActivity(), "Registration Successful", Toast.LENGTH_SHORT).show()
                     //startActivity(Intent(this, ChatActivity::class.java))
-                    binding.emailEditText.text.clear()
-                    binding.passwordEditText.text.clear()
+                    binding?.emailEditText?.text?.clear()
+                    binding?.passwordEditText?.text?.clear()
                 } else {
                     Toast.makeText(this.requireActivity(), "An error occurred", Toast.LENGTH_SHORT).show()
-                    binding.emailEditText.text.clear()
-                    binding.passwordEditText.text.clear()
+                    binding?.emailEditText?.text?.clear()
+                    binding?.passwordEditText?.text?.clear()
                 }
             }
     }
 
     private fun loginUser() {
-        var email: String = binding.loginEmailEditText.text.toString().trim()
-        var password: String = binding.loginPasswordEditText.text.toString().trim()
+        val email: String = binding?.loginEmailEditText?.text.toString().trim()
+        val password: String = binding?.loginPasswordEditText?.text.toString().trim()
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this.requireActivity(), "Login successful", Toast.LENGTH_SHORT).show()
                     //startActivity(Intent(this, ChatActivity::class.java))
-                    binding.loginEmailEditText.text.clear()
-                    binding.loginPasswordEditText.text.clear()
+                    binding?.loginEmailEditText?.text?.clear()
+                    binding?.loginPasswordEditText?.text?.clear()
                     (activity as MainActivity).privilege = true
                     StateManager.getInstance().removeAllFragmentStream(SCANNER_ID, ScannerFragment())
                 } else {
                     Toast.makeText(this.requireActivity(), "Unable to login. Check your input or try again later", Toast.LENGTH_SHORT).show()
-                    binding.loginEmailEditText.text.clear()
-                    binding.loginPasswordEditText.text.clear()
+                    binding?.loginEmailEditText?.text?.clear()
+                    binding?.loginPasswordEditText?.text?.clear()
                 }
             }
     }
 
     private fun checkPassword() : Boolean
     {
-        var pwOne : String = binding.passwordEditText.text.toString()
-        var pwTwo : String = binding.rePasswordEditText.text.toString()
+        val pwOne : String = binding?.passwordEditText?.text.toString()
+        val pwTwo : String = binding?.rePasswordEditText?.text.toString()
 
         return pwOne == pwTwo
     }

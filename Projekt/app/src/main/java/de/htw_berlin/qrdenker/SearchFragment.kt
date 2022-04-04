@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eu.fragmentstatemanager.StateManager
 import com.itextpdf.text.*
-import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
 import com.itextpdf.text.pdf.draw.LineSeparator
 import com.karumi.dexter.Dexter
@@ -36,8 +35,6 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import de.htw_berlin.qrdenker.MainActivity.Companion.CREATING_ID
 import de.htw_berlin.qrdenker.MainActivity.Companion.SEARCH_ID
-import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.fragment_search.view.*
 import de.htw_berlin.qrdenker.databinding.FragmentSearchBinding
 import de.htw_berlin.qrdenker.firebase.viewmodel.DocumentViewModel
 import de.htw_berlin.qrdenker.firebase.viewmodel.DocumentViewModelState
@@ -47,21 +44,15 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.util.*
 
 class SearchFragment : Fragment() {
 
-    val fileName: String = "qrcode.pdf"
-    internal lateinit var binding : FragmentSearchBinding
+    private val fileName: String = "qrcode.pdf"
+    private var binding : FragmentSearchBinding? = null
 
     private val documentViewModel : DocumentViewModel by activityViewModels()
     private val printViewModel : PrintViewModel by viewModels()
 
-    internal lateinit var documentTxt : TextView
-    internal lateinit var collectionTxt : TextView
-    internal lateinit var switch : Switch
-    internal lateinit var searchBtn : Button
-    internal lateinit var editTxt : EditText
 
     internal lateinit var recyclerView : RecyclerView
     private lateinit var viewModel : SearchViewModel
@@ -77,7 +68,8 @@ class SearchFragment : Fragment() {
         viewModel = ViewModelProvider(this.requireActivity()).get(SearchViewModel::class.java)
         binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
         setHasOptionsMenu(true)
-        return binding.root
+        if (binding == null) throw  java.lang.Exception("SearchFragmentBinding was null")
+        return binding?.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -91,16 +83,6 @@ class SearchFragment : Fragment() {
             .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             .withListener(object: PermissionListener {
                 override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-                    //createPDFFile(Common.getAppPath(requireActivity())+fileName)
-/*                    MenuItem.OnMenuItemClickListener { item ->
-                        when(item.itemId)
-                        {
-                            R.id.printing ->{
-                                createPDFFile(Common.getAppPath(requireActivity())+fileName)
-                            }
-                        }
-                        return@OnMenuItemClickListener true
-                    }*/
                 }
 
                 override fun onPermissionDenied(response: PermissionDeniedResponse?) {
@@ -117,55 +99,48 @@ class SearchFragment : Fragment() {
             })
             .check()
 
-        documentTxt = binding.documentTxtview
-        collectionTxt = binding.collectionTxtview
-        switch = binding.searchSwitch
-        searchBtn = binding.searchSearchBtn
-        editTxt = binding.searchInputEdtxt
-
-        recyclerView = binding.searchResultRecyclerView
+        recyclerView = requireNotNull(binding?.searchResultRecyclerView)
         recyclerView.adapter = viewModel.searchRecyclerViewAdapter
         recyclerView.layoutManager = LinearLayoutManager(this.requireContext())
         recyclerView.setHasFixedSize(true)
 
 
-        documentTxt.setTypeface(Typeface.SANS_SERIF,Typeface.BOLD)
+        binding?.documentTxtview?.setTypeface(Typeface.SANS_SERIF,Typeface.BOLD)
 
-        switch.setOnCheckedChangeListener{ buttonView, isChecked ->
-            if (isChecked){
-                documentTxt.setTypeface(null,Typeface.NORMAL)
-                collectionTxt.setTypeface(null, Typeface.BOLD)
-                documentOrCellection = true
-            }
-            else{
-                documentTxt.setTypeface(null,Typeface.BOLD)
-                collectionTxt.setTypeface(null, Typeface.NORMAL)
-                documentOrCellection = false
+        binding?.searchSwitch?.setOnCheckedChangeListener{ buttonView, isChecked ->
+            documentOrCellection = if (isChecked){
+                binding?.documentTxtview?.setTypeface(null,Typeface.NORMAL)
+                binding?.collectionTxtview?.setTypeface(null, Typeface.BOLD)
+                true
+            } else{
+                binding?.documentTxtview?.setTypeface(null,Typeface.BOLD)
+                binding?.collectionTxtview?.setTypeface(null, Typeface.NORMAL)
+                false
             }
         }
 
         // initializing the search with dedicated button
-        searchBtn.setOnClickListener{
-            documentViewModel.search( "testCollection" , editTxt.text.toString())
+        binding?.searchSearchBtn?.setOnClickListener{
+            documentViewModel.search( "testCollection" , binding?.searchInputEdtxt?.text.toString())
             // Code for search
         }
         // or with the done button of the softkeyboard
-        editTxt.setOnEditorActionListener { _, keyCode, event ->
+        binding?.searchInputEdtxt?.setOnEditorActionListener { _, keyCode, event ->
             if (((event?.action ?: -1) == KeyEvent.ACTION_DOWN)
                 || keyCode == EditorInfo.IME_ACTION_DONE) {
                 // Code for search
-                documentViewModel.search( "testCollection" , editTxt.text.toString())
+                documentViewModel.search( "testCollection" , binding?.searchInputEdtxt?.text.toString())
                 hideKeyboard()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
         // or
-        editTxt.setOnKeyListener(View.OnKeyListener{ v, keyCode, event ->
+        binding?.searchInputEdtxt?.setOnKeyListener(View.OnKeyListener{ v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP){
                 // Code for search
                 hideKeyboard()
-                documentViewModel.search( "testCollection" , editTxt.text.toString())
+                documentViewModel.search( "testCollection" , binding?.searchInputEdtxt?.text.toString())
                 return@OnKeyListener true
             }
             false
@@ -233,8 +208,13 @@ class SearchFragment : Fragment() {
         {
             R.id.printing ->{
                 val idList = mutableListOf<Pair<String, String>>()
-                for(item in viewModel.searchRecyclerViewAdapter.items){
-                    idList.add(Pair(item.id, item.title))
+                viewModel.searchRecyclerViewAdapter.items.forEach { item ->
+                    idList.add(
+                        Pair(
+                            item.id,
+                            item.title
+                        )
+                    )
                 }
                 printViewModel.generateQRCodes(idList)
                 createPDFFile(Common.getAppPath(requireActivity())+fileName, printViewModel.qrCodeList.toTypedArray())
@@ -257,12 +237,12 @@ class SearchFragment : Fragment() {
                             Toast.makeText(activity , "fetch succes", Toast.LENGTH_LONG).show()
                         }
                         is DocumentViewModelState.SearchFetchSuccess -> {
-                            Log.d("???", "${it.documents.toString()}")
+                            Log.d("???", it.documents.toString())
                             Toast.makeText(activity , "searchfetch succes", Toast.LENGTH_LONG).show()
                             viewModel.updateRecyclerView(it.documents)
                         }
                         is DocumentViewModelState.DeleteSuccess -> {
-                            Log.d("???", "${it.documentId}")
+                            Log.d("???", it.documentId)
                             Toast.makeText(activity , "delete succes", Toast.LENGTH_LONG).show()
                         }
                         is DocumentViewModelState.Loading -> {
@@ -283,11 +263,11 @@ class SearchFragment : Fragment() {
     }
 
     // methods to hide the softkeyboard
-    fun Fragment.hideKeyboard() {
+    private fun Fragment.hideKeyboard() {
         view?.let { activity?.hideKeyboard(it) }
     }
 
-    fun Context.hideKeyboard(view: View) {
+    private fun Context.hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
@@ -318,10 +298,10 @@ class SearchFragment : Fragment() {
             val fontName = Font.FontFamily.HELVETICA
 
             // Creating the PDF with QR Codes
-            var titleStyle = Font(fontName, 18.0f, Font.NORMAL, BaseColor.BLACK)
+            val titleStyle = Font(fontName, 18.0f, Font.NORMAL, BaseColor.BLACK)
             addNewItem(document,"QR-Codes generiert mit der QR-Denker", Element.ALIGN_CENTER,titleStyle)
 
-            var headingStyle = Font(fontName, headingFontSize, Font.NORMAL, colorAccent)
+            val headingStyle = Font(fontName, headingFontSize, Font.NORMAL, colorAccent)
 
 
             for (qrcode in qrcodeList)
