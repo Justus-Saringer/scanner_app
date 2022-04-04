@@ -1,5 +1,7 @@
 **Die ReadMe Datei des Teams drei**
 
+*Disclaimer: Die Verbindung zum FireBase Server wurde leider eingestellt, daher können leider keine QR-Codes mehr empfangen oder auf dem Server gespeichert werden.*
+
 **Rundgang**
 
 Wenn Sie die App öffnen gelangen Sie direkt in den Scannerbereich. Hier können Sie QR-Codes scannen.
